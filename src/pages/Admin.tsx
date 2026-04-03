@@ -24,8 +24,8 @@ interface SocialFormData {
   color: string
 }
 
-const ADMIN_EMAIL = 'nassim@admin.com'
-const ADMIN_PASSWORD = 'NassimAdmin2024!'
+const ADMIN_EMAIL = 'nassim@gmail.com'
+const ADMIN_PASSWORD = 'nassimkchkch'
 
 const gradientOptions = [
   'linear-gradient(135deg, #1a3a5c 0%, #0d1530 100%)',

@@ -172,7 +172,7 @@ export default function Work() {
 }
 
 interface ProjectCardProps {
-  project: typeof projects[0]
+  project: Project
   index: number
   isHovered: boolean
   onHover: () => void
@@ -246,7 +246,7 @@ function ProjectCard({ project, index, isHovered, onHover, onUnhover }: ProjectC
           <h3 className="card-title">{project.title}</h3>
           <p className="card-desc">{project.description}</p>
           <div className="card-tags">
-            {project.tags.map(tag => (
+            {project.tags.map((tag: string) => (
               <span key={tag} className="card-tag">{tag}</span>
             ))}
           </div>

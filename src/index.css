@@ -1,0 +1,159 @@
+/* ============================================
+   NASSIM PORTFOLIO — GLOBAL STYLES
+   Glassmorphic / Cinematic Theme
+   ============================================ */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  /* Core palette */
+  --bg-deep: #04060f;
+  --bg-mid: #080d1e;
+  --bg-surface: #0d1530;
+
+  /* Glass */
+  --glass-white: rgba(255, 255, 255, 0.04);
+  --glass-white-hover: rgba(255, 255, 255, 0.08);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-border-hover: rgba(255, 255, 255, 0.18);
+  --glass-glow: rgba(99, 179, 237, 0.12);
+
+  /* Accent system */
+  --accent-primary: #63b3ed;
+  --accent-secondary: #9f7aea;
+  --accent-tertiary: #68d391;
+  --accent-warm: #f6ad55;
+  --accent-pink: #fc8181;
+
+  /* Gradients */
+  --grad-hero: linear-gradient(135deg, #63b3ed 0%, #9f7aea 50%, #fc8181 100%);
+  --grad-card: linear-gradient(145deg, rgba(99,179,237,0.08) 0%, rgba(159,122,234,0.04) 100%);
+  --grad-text: linear-gradient(90deg, #63b3ed, #9f7aea, #fc8181);
+
+  /* Typography */
+  --font-display: 'Syne', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+
+  /* Spacing */
+  --section-pad: clamp(80px, 12vw, 140px);
+  --container: 1200px;
+
+  /* Transitions */
+  --ease-glass: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --dur-fast: 200ms;
+  --dur-mid: 400ms;
+  --dur-slow: 700ms;
+}
+
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-deep);
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.6;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg-deep); }
+::-webkit-scrollbar-thumb { background: var(--accent-primary); border-radius: 2px; }
+
+/* Selection */
+::selection {
+  background: rgba(99, 179, 237, 0.3);
+  color: #fff;
+}
+
+/* Glass mixin utility classes */
+.glass {
+  background: var(--glass-white);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  transition: all var(--dur-mid) var(--ease-glass);
+}
+
+.glass:hover {
+  background: var(--glass-white-hover);
+  border-color: var(--glass-border-hover);
+}
+
+/* Gradient text */
+.grad-text {
+  background: var(--grad-text);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Container */
+.container {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 0 clamp(20px, 5vw, 60px);
+}
+
+/* Noise overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.3;
+}
+
+/* Background orbs */
+.bg-orb {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(100px);
+  pointer-events: none;
+  z-index: 0;
+  animation: orbFloat 20s ease-in-out infinite alternate;
+}
+
+@keyframes orbFloat {
+  from { transform: translate(0, 0) scale(1); }
+  to { transform: translate(30px, -30px) scale(1.05); }
+}
+
+/* Fade in animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(1); opacity: 0.6; }
+  100% { transform: scale(1.4); opacity: 0; }
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}

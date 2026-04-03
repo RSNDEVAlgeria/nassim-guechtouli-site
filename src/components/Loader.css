@@ -1,0 +1,95 @@
+.loader {
+  position: fixed;
+  inset: 0;
+  background: #04060f;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  z-index: 99999;
+}
+
+.loader-logo {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.loader-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  position: relative;
+  z-index: 1;
+}
+
+.loader-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1.5px solid transparent;
+  border-top-color: #63b3ed;
+  border-right-color: rgba(99,179,237,0.3);
+  animation: spin-slow 1.2s linear infinite;
+}
+
+.loader-ring::after {
+  content: '';
+  position: absolute;
+  inset: 5px;
+  border-radius: 50%;
+  border: 1px solid rgba(159,122,234,0.3);
+  border-bottom-color: #9f7aea;
+  animation: spin-slow 1.8s linear infinite reverse;
+}
+
+.loader-name {
+  font-family: 'Syne', sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  color: rgba(255,255,255,0.8);
+  letter-spacing: 0.02em;
+}
+
+.loader-progress-track {
+  width: 200px;
+  height: 1px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 1px;
+  overflow: hidden;
+}
+
+.loader-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #63b3ed, #9f7aea, #fc8181);
+  border-radius: 1px;
+}
+
+.loader-tagline {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.3);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 768px) {
+  .loader-logo {
+    width: 50px;
+    height: 50px;
+  }
+
+  .loader-name {
+    font-size: 0.9rem;
+  }
+
+  .loader-progress-track {
+    width: 160px;
+  }
+}

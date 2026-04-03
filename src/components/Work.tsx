@@ -1,10 +1,11 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { motion, useInView, AnimatePresence } from 'framer-motion'
+import { supabase, Project } from '../lib/supabase'
 import './Work.css'
 
 const categories = ['All', 'Branding', 'UI/UX', 'Print', 'Motion']
 
-const projects = [
+const defaultProjects: Project[] = [
   {
     id: 1,
     title: 'RSN Dev Identity',
@@ -16,6 +17,7 @@ const projects = [
     accent: 'rgba(99, 179, 237, 0.2)',
     description: 'Complete visual identity system for RSN Dev — logo, color palette, and design language.',
     size: 'large',
+    order_index: 1,
   },
   {
     id: 2,
@@ -28,6 +30,7 @@ const projects = [
     accent: 'rgba(159, 122, 234, 0.2)',
     description: 'A comprehensive dark-mode UI kit with 200+ components built for modern web applications.',
     size: 'medium',
+    order_index: 2,
   },
   {
     id: 3,
@@ -40,6 +43,7 @@ const projects = [
     accent: 'rgba(252, 129, 129, 0.2)',
     description: 'Editorial layout design for a youth culture magazine — bold typography meets refined layouts.',
     size: 'medium',
+    order_index: 3,
   },
   {
     id: 4,
@@ -52,6 +56,7 @@ const projects = [
     accent: 'rgba(104, 211, 145, 0.2)',
     description: 'A series of seamless motion graphics loops for social media and brand campaigns.',
     size: 'small',
+    order_index: 4,
   },
   {
     id: 5,
@@ -64,6 +69,7 @@ const projects = [
     accent: 'rgba(246, 173, 85, 0.2)',
     description: 'Full brand identity for a luxury lifestyle startup — from concept to complete brand guidelines.',
     size: 'small',
+    order_index: 5,
   },
   {
     id: 6,
@@ -76,14 +82,26 @@ const projects = [
     accent: 'rgba(99, 179, 237, 0.2)',
     description: 'Analytics dashboard redesign for a B2B SaaS platform — doubling user engagement metrics.',
     size: 'large',
+    order_index: 6,
   },
 ]
 
 export default function Work() {
   const [activeCategory, setActiveCategory] = useState('All')
   const [hoveredId, setHoveredId] = useState<number | null>(null)
+  const [projects, setProjects] = useState<Project[]>(defaultProjects)
   const sectionRef = useRef<HTMLElement>(null)
   const isInView = useInView(sectionRef, { once: true, margin: '-100px' })
+
+  useEffect(() => {
+    async function loadProjects() {
+      const { data } = await supabase.from('projects').select('*').order('order_index')
+      if (data && data.length > 0) {
+        setProjects(data)
+      }
+    }
+    loadProjects()
+  }, [])
 
   const filtered = activeCategory === 'All'
     ? projects

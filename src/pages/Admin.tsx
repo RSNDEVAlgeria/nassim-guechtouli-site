@@ -3,6 +3,8 @@ import { motion } from 'framer-motion'
 import { supabase, Project, SocialLink } from '../lib/supabase'
 import './Admin.css'
 
+const PROJECTS_BUCKET = import.meta.env.VITE_SUPABASE_PROJECTS_BUCKET || 'projects'
+
 type Tab = 'projects' | 'skills' | 'socials' | 'site'
 
 interface ProjectFormData {
@@ -313,7 +315,7 @@ function ProjectsTab({
       const filePath = `projects/${Date.now()}-${safeName}`
       const { error: uploadError } = await supabase
         .storage
-        .from('projects')
+        .from(PROJECTS_BUCKET)
         .upload(filePath, selectedFile, {
           upsert: true,
           contentType: selectedFile.type || 'image/jpeg',
@@ -322,12 +324,12 @@ function ProjectsTab({
 
       if (uploadError) {
         console.error('Supabase upload error', uploadError)
-        setUploadError(uploadError.message || 'Image upload failed. Check storage policies for bucket "projects".')
+        setUploadError(uploadError.message || `Image upload failed. Check storage policies for bucket "${PROJECTS_BUCKET}".`)
         setUploading(false)
         return
       }
 
-      const { data } = supabase.storage.from('projects').getPublicUrl(filePath)
+      const { data } = supabase.storage.from(PROJECTS_BUCKET).getPublicUrl(filePath)
       imageUrl = data.publicUrl
       setUploading(false)
     }

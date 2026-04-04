@@ -163,12 +163,18 @@ export default function Admin() {
     <div className="admin-container">
       <motion.div 
         className="admin-sidebar"
-        initial={{ x: -100, opacity: 0 }}
-        animate={{ x: 0, opacity: 1 }}
-        transition={{ duration: 0.4 }}
+        initial={{ y: -30, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.25 }}
       >
-        <a href="/" className="admin-logo">NG<span className="admin-dot">.</span></a>
-        <nav className="admin-nav">
+        <div className="admin-sidebar-top">
+          <a href="/" className="admin-logo">NG<span className="admin-dot">.</span></a>
+          <button className="admin-logout" onClick={handleLogout}>
+            Logout
+          </button>
+        </div>
+
+        <nav className="admin-nav" aria-label="Admin sections">
           <button className={activeTab === 'projects' ? 'active' : ''} onClick={() => setActiveTab('projects')}>
             Projects
           </button>
@@ -182,9 +188,6 @@ export default function Admin() {
             Site Info
           </button>
         </nav>
-        <button className="admin-logout" onClick={handleLogout}>
-          Logout
-        </button>
         <a href="/" className="admin-back">
           ← Back to Site
         </a>
@@ -194,10 +197,16 @@ export default function Admin() {
         className="admin-main"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 0.4, delay: 0.1 }}
+        transition={{ duration: 0.3, delay: 0.05 }}
       >
         <header className="admin-header">
-          <h1>{activeTab === 'projects' ? 'Projects' : activeTab === 'skills' ? 'Skills' : activeTab === 'socials' ? 'Social Links' : 'Site Info'}</h1>
+          <div>
+            <p className="admin-kicker">Admin</p>
+            <h1>{activeTab === 'projects' ? 'Projects' : activeTab === 'skills' ? 'Skills' : activeTab === 'socials' ? 'Social Links' : 'Site Info'}</h1>
+          </div>
+          <div className="admin-header-actions">
+            <button className="admin-ghost" onClick={handleLogout}>Logout</button>
+          </div>
         </header>
 
         <div className="admin-content">

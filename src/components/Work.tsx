@@ -245,7 +245,7 @@ function ProjectCard({ project, index, isHovered, onHover, onUnhover }: ProjectC
     </>
   )
 
-  return (
+  const card = (
     <motion.div
       ref={cardRef}
       className={`project-card card-${project.size}`}
@@ -265,19 +265,24 @@ function ProjectCard({ project, index, isHovered, onHover, onUnhover }: ProjectC
         '--color': project.color,
         transform: `perspective(800px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg))`,
       } as React.CSSProperties}
+      onClick={() => {
+        if (project.link) window.open(project.link, '_blank', 'noopener,noreferrer')
+      }}
     >
-      {project.link ? (
-        <a
-          href={project.link}
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{ display: 'contents' }}
-        >
-          {content}
-        </a>
-      ) : (
-        content
-      )}
+      {content}
     </motion.div>
+  )
+
+  return project.link ? (
+    <a
+      href={project.link}
+      target="_blank"
+      rel="noopener noreferrer"
+      style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}
+    >
+      {card}
+    </a>
+  ) : (
+    card
   )
 }

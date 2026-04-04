@@ -285,6 +285,7 @@ function ProjectsTab({
   })
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [uploading, setUploading] = useState(false)
+  const [uploadError, setUploadError] = useState('')
 
   useEffect(() => {
     if (editingId) {
@@ -304,17 +305,24 @@ function ProjectsTab({
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     let imageUrl = form.image
+    setUploadError('')
 
     if (selectedFile) {
       setUploading(true)
-      const filePath = `projects/${Date.now()}-${selectedFile.name}`
+      const safeName = selectedFile.name.replace(/[^a-zA-Z0-9._-]/g, '_')
+      const filePath = `projects/${Date.now()}-${safeName}`
       const { error: uploadError } = await supabase
         .storage
         .from('projects')
-        .upload(filePath, selectedFile, { upsert: true })
+        .upload(filePath, selectedFile, {
+          upsert: true,
+          contentType: selectedFile.type || 'image/jpeg',
+          cacheControl: '3600',
+        })
 
       if (uploadError) {
-        alert('Image upload failed. Please try again.')
+        console.error('Supabase upload error', uploadError)
+        setUploadError(uploadError.message || 'Image upload failed. Check storage policies for bucket "projects".')
         setUploading(false)
         return
       }
@@ -394,6 +402,7 @@ function ProjectsTab({
               placeholder="Or paste an existing image URL"
             />
             {selectedFile && <p className="admin-hint">Selected: {selectedFile.name}</p>}
+            {uploadError && <p className="login-error" style={{ marginTop: 4 }}>{uploadError}</p>}
           </div>
           <div className="form-group">
             <label>Project Link</label>

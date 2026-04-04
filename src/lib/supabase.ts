@@ -17,6 +17,8 @@ export interface Project {
   description: string
   size: 'small' | 'medium' | 'large'
   order_index: number
+  image?: string
+  link?: string
 }
 
 export interface SocialLink {

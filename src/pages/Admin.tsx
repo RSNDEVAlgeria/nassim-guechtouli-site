@@ -14,6 +14,8 @@ interface ProjectFormData {
   gradient: string
   description: string
   size: string
+  image: string
+  link: string
 }
 
 interface SocialFormData {
@@ -98,6 +100,8 @@ export default function Admin() {
       accent: data.color + '33',
       description: data.description,
       size: data.size as 'small' | 'medium' | 'large',
+      image: data.image || null,
+      link: data.link || null,
     }
     if (editingId) {
       await supabase.from('projects').update(payload).eq('id', editingId)
@@ -277,8 +281,10 @@ function ProjectsTab({
 }: any) {
   const [form, setForm] = useState<ProjectFormData>({
     title: '', category: 'Branding', year: '2024', tags: '', color: '#63b3ed',
-    gradient: gradientOptions[0], description: '', size: 'medium'
+    gradient: gradientOptions[0], description: '', size: 'medium', image: '', link: ''
   })
+  const [selectedFile, setSelectedFile] = useState<File | null>(null)
+  const [uploading, setUploading] = useState(false)
 
   useEffect(() => {
     if (editingId) {
@@ -295,11 +301,33 @@ function ProjectsTab({
     setForm({ ...form, gradient })
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    onSave(form)
+    let imageUrl = form.image
+
+    if (selectedFile) {
+      setUploading(true)
+      const filePath = `projects/${Date.now()}-${selectedFile.name}`
+      const { error: uploadError } = await supabase
+        .storage
+        .from('projects')
+        .upload(filePath, selectedFile, { upsert: true })
+
+      if (uploadError) {
+        alert('Image upload failed. Please try again.')
+        setUploading(false)
+        return
+      }
+
+      const { data } = supabase.storage.from('projects').getPublicUrl(filePath)
+      imageUrl = data.publicUrl
+      setUploading(false)
+    }
+
+    onSave({ ...form, image: imageUrl })
     if (!editingId) {
-      setForm({ title: '', category: 'Branding', year: '2024', tags: '', color: '#63b3ed', gradient: gradientOptions[0], description: '', size: 'medium' })
+      setForm({ title: '', category: 'Branding', year: '2024', tags: '', color: '#63b3ed', gradient: gradientOptions[0], description: '', size: 'medium', image: '', link: '' })
+      setSelectedFile(null)
     }
   }
 
@@ -353,10 +381,30 @@ function ProjectsTab({
             <label>Description</label>
             <textarea value={form.description} onChange={e => setForm({...form, description: e.target.value})} rows={3} />
           </div>
+          <div className="form-group">
+            <label>Project Image</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={e => setSelectedFile(e.target.files?.[0] || null)}
+            />
+            <input
+              value={form.image}
+              onChange={e => setForm({ ...form, image: e.target.value })}
+              placeholder="Or paste an existing image URL"
+            />
+            {selectedFile && <p className="admin-hint">Selected: {selectedFile.name}</p>}
+          </div>
+          <div className="form-group">
+            <label>Project Link</label>
+            <input value={form.link} onChange={e => setForm({...form, link: e.target.value})} placeholder="https://example.com" />
+          </div>
         </div>
         <div className="form-actions">
           {editingId && <button type="button" className="btn-cancel" onClick={onCancelEdit}>Cancel</button>}
-          <button type="submit" className="btn-save" disabled={saving}>{saving ? 'Saving...' : editingId ? 'Update Project' : 'Add Project'}</button>
+          <button type="submit" className="btn-save" disabled={saving || uploading}>
+            {uploading ? 'Uploading...' : saving ? 'Saving...' : editingId ? 'Update Project' : 'Add Project'}
+          </button>
         </div>
       </form>
 

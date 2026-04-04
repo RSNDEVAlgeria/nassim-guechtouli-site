@@ -201,6 +201,50 @@ function ProjectCard({ project, index, isHovered, onHover, onUnhover }: ProjectC
     onUnhover()
   }
 
+  const content = (
+    <>
+      <div className="card-shine" />
+      <div className="card-inner">
+        <div className="card-top">
+          <span className="card-cat" style={{ color: project.color }}>
+            {project.category}
+          </span>
+          <span className="card-year">{project.year}</span>
+        </div>
+        <div className="card-visual">
+          {project.image ? (
+            <img src={project.image} alt={project.title} className="card-image" />
+          ) : (
+            <>
+              <div className="card-visual-orb" style={{ background: project.accent }} />
+              <div className="card-letter" style={{ color: project.color }}>
+                {project.title[0]}
+              </div>
+            </>
+          )}
+        </div>
+        <div className="card-bottom">
+          <h3 className="card-title">{project.title}</h3>
+          <p className="card-desc">{project.description}</p>
+          <div className="card-tags">
+            {project.tags.map((tag: string) => (
+              <span key={tag} className="card-tag">{tag}</span>
+            ))}
+          </div>
+        </div>
+      </div>
+      <motion.div
+        className="card-arrow"
+        animate={{ opacity: isHovered ? 1 : 0, x: isHovered ? 0 : -10 }}
+        transition={{ duration: 0.2 }}
+      >
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path d="M4 10h12M12 6l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      </motion.div>
+    </>
+  )
+
   return (
     <motion.div
       ref={cardRef}
@@ -222,47 +266,18 @@ function ProjectCard({ project, index, isHovered, onHover, onUnhover }: ProjectC
         transform: `perspective(800px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg))`,
       } as React.CSSProperties}
     >
-      {/* Shine overlay */}
-      <div className="card-shine" />
-
-      {/* Glass content */}
-      <div className="card-inner">
-        <div className="card-top">
-          <span className="card-cat" style={{ color: project.color }}>
-            {project.category}
-          </span>
-          <span className="card-year">{project.year}</span>
-        </div>
-
-        {/* Visual area */}
-        <div className="card-visual">
-          <div className="card-visual-orb" style={{ background: project.accent }} />
-          <div className="card-letter" style={{ color: project.color }}>
-            {project.title[0]}
-          </div>
-        </div>
-
-        <div className="card-bottom">
-          <h3 className="card-title">{project.title}</h3>
-          <p className="card-desc">{project.description}</p>
-          <div className="card-tags">
-            {project.tags.map((tag: string) => (
-              <span key={tag} className="card-tag">{tag}</span>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Hover arrow */}
-      <motion.div
-        className="card-arrow"
-        animate={{ opacity: isHovered ? 1 : 0, x: isHovered ? 0 : -10 }}
-        transition={{ duration: 0.2 }}
-      >
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-          <path d="M4 10h12M12 6l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>
-      </motion.div>
+      {project.link ? (
+        <a
+          href={project.link}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ display: 'contents' }}
+        >
+          {content}
+        </a>
+      ) : (
+        content
+      )}
     </motion.div>
   )
 }
